@@ -64,6 +64,7 @@
     <Compile Include="NewData\CustomNetSegment.cs" />
     <Compile Include="NewManager\CustomNetManager.cs" />
     <Compile Include="Threading.cs" />
+    <Compile Include="UI\ScaleUI.cs" />
     <Compile Include="UI\SmoothButton.cs" />
     <Compile Include="UI\FixButton.cs" />
     <Compile Include="UI\YRoadButton.cs" />

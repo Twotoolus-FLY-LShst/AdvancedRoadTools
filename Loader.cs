@@ -31,6 +31,10 @@ namespace AdvancedRoadTools
         public static bool m_atlasLoaded;
         public static bool HarmonyDetourInited = false;
         public static bool HarmonyDetourFailed = true;
+
+        public static UIPanel scaleInfo;
+        public static ScaleUI scaleUI;
+        public static GameObject ScaleWindowGameObject;
         public class Detour
         {
             public MethodInfo OriginalMethod;
@@ -120,6 +124,14 @@ namespace AdvancedRoadTools
             else DebugLog.LogToFileOnly("Error: The texture atlas (provides custom icons) has not loaded. All icons have reverted to text prompts.");
         }
 
+        public static void SetupScaleGui()
+        {
+            if (scaleUI == null)
+            {
+                scaleUI = (parentGuiView.AddUIComponent(typeof(ScaleUI)) as ScaleUI);
+            }
+        }
+
         public static void SetupTools()
         {
             if (AdvancedTools.instance == null)
@@ -160,18 +172,17 @@ namespace AdvancedRoadTools
                 bool detourFailed = false;
 
                 //1
-                //private void RefreshJunctionData(ushort nodeID, NetInfo info, uint instanceIndex)
-                /*DebugLog.LogToFileOnly("Detour NetNode::RefreshJunctionData calls");
+                DebugLog.LogToFileOnly("Detour AssetImporterAssetImport::GetScaleMesh calls");
                 try
                 {
-                    Detours.Add(new Detour(typeof(NetNode).GetMethod("RefreshJunctionData", BindingFlags.NonPublic | BindingFlags.Instance, null, new Type[] { typeof(ushort), typeof(NetInfo), typeof(uint) }, null),
-                                           typeof(CustomNetNode).GetMethod("RefreshJunctionData", BindingFlags.Public | BindingFlags.Static, null, new Type[] { typeof(NetNode).MakeByRefType(), typeof(ushort), typeof(NetInfo), typeof(uint) }, null)));
+                    Detours.Add(new Detour(typeof(AssetImporterAssetImport).GetMethod("GetScaleMesh", BindingFlags.NonPublic | BindingFlags.Instance),
+                                           typeof(MainDataStore).GetMethod("GetScaleMesh", BindingFlags.NonPublic | BindingFlags.Instance)));
                 }
                 catch (Exception)
                 {
-                    DebugLog.LogToFileOnly("Could not detour NetNode::RefreshJunctionData");
+                    DebugLog.LogToFileOnly("Could not detour AssetImporterAssetImport::GetScaleMesh");
                     //detourFailed = true;
-                }*/
+                }
                 //2
                 //public static void CalculateCorner(ref NetSegment segment, ushort segmentID, bool heightOffset, bool start, bool leftSide, out Vector3 cornerPos, out Vector3 cornerDirection, out bool smooth)
                 DebugLog.LogToFileOnly("Detour NetSegment::CalculateCorner calls");
@@ -225,6 +236,7 @@ namespace AdvancedRoadTools
                 SetupYRoadButton();
                 SetupSmoothButton();
                 SetupFixButton();
+                SetupScaleGui();
                 isGuiRunning = true;
             }
         }
@@ -280,11 +292,13 @@ namespace AdvancedRoadTools
                 UnityEngine.Object.Destroy(yRoadButton);
                 UnityEngine.Object.Destroy(smoothButton);
                 UnityEngine.Object.Destroy(fixButton);
+                UnityEngine.Object.Destroy(scaleUI);
                 threeRoundButton = null;
                 oneRoundButton = null;
                 yRoadButton = null;
                 smoothButton = null;
                 fixButton = null;
+                scaleUI = null;
             }
         }
     }
